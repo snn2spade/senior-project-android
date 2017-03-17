@@ -1,0 +1,55 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <!--activity_stock_info-->
+    <style name="StockSymbol">
+        <item name="android:textSize">19sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="StockPrice">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="StockPrice.Green">
+        <item name="android:textColor">@color/colorTrendUp</item>
+    </style>
+
+    <style name="StockPrice.Red">
+        <item name="android:textColor">@color/colorTrendDown</item>
+    </style>
+
+    <style name="SubStockInfo">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="dateInfo">
+        <item name="android:textSize">9sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="head_content">
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+    <style name="sub_content">
+        <item name="android:textSize">13sp</item>
+        <item name="android:layout_marginTop">5dp</item>
+    </style>
+    <style name="card_style">
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+</resources>
