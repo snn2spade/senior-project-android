@@ -7,7 +7,6 @@ import android.provider.Settings;
 
 import com.seniorproject.snn2spade.seniorproject.manager.Contextor;
 
-
 public class Utils {
 
     private static Utils instance;

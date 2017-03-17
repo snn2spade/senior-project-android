@@ -1,7 +1,6 @@
 package com.seniorproject.snn2spade.seniorproject.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.seniorproject.snn2spade.seniorproject.R;
-import com.seniorproject.snn2spade.seniorproject.activity.StockInfoActivity;
 import com.seniorproject.snn2spade.seniorproject.fragment.StockInfoFragment;
 import com.seniorproject.snn2spade.seniorproject.util.Utils;
 

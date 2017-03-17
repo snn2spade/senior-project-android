@@ -17,6 +17,7 @@ public class MainApplication extends Application {
 
     @Override
     public void onTerminate() {
+
         super.onTerminate();
     }
 }

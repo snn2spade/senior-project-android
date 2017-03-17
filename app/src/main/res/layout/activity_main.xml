@@ -53,16 +53,9 @@
             android:src="@drawable/ic_menu_white_24dp" />
     </LinearLayout>
 
-    <ScrollView
-        android:id="@+id/content_scroll"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-    </ScrollView>
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 </LinearLayout>

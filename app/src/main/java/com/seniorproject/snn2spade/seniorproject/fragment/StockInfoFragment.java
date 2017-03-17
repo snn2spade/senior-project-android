@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.seniorproject.snn2spade.seniorproject.R;
+import com.seniorproject.snn2spade.seniorproject.util.DynamicScrollbar;
 
 /**
  * Created by snn2spade on 3/18/2017 AD.

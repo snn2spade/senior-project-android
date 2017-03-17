@@ -7,16 +7,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.seniorproject.snn2spade.seniorproject.R;
-import com.seniorproject.snn2spade.seniorproject.activity.MainActivity;
 import com.seniorproject.snn2spade.seniorproject.adapter.CardViewAdapter;
-import com.seniorproject.snn2spade.seniorproject.util.Utils;
+import com.seniorproject.snn2spade.seniorproject.util.DynamicScrollbar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,8 +36,6 @@ public class DashboardFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private CardViewAdapter mAdapter;
-
-    private boolean isMinHeightActionBar;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -97,34 +92,14 @@ public class DashboardFragment extends Fragment {
         // 5. set item animator to DefaultAnimator
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         // 6. set scroll listener
-        isMinHeightActionBar = false;
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 int vertical_offset = mRecyclerView.computeVerticalScrollOffset();
-                if (vertical_offset <= 500) {
-                    LinearLayout ll = (LinearLayout) getActivity().findViewById(R.id.action_bar_container);
-                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll.getLayoutParams();
-                    int height = (int) ((500 - vertical_offset) / 500.0 * 30) + 50;
-                    params.height = Utils.getInstance().dpToPx(height);
-                    params.width = ll.getWidth();
-                    ll.setLayoutParams(params);
-                    ll.invalidate();
-                    isMinHeightActionBar = false;
-                } else if (!isMinHeightActionBar && vertical_offset > 500) {
-                    LinearLayout ll = (LinearLayout) getActivity().findViewById(R.id.action_bar_container);
-                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll.getLayoutParams();
-                    params.height = Utils.getInstance().dpToPx(50);
-                    params.width = ll.getWidth();
-                    ll.setLayoutParams(params);
-                    ll.invalidate();
-                    isMinHeightActionBar = true;
-                }
-                Log.d("DashboardFragment", mRecyclerView.computeVerticalScrollOffset() + "");
+                DynamicScrollbar.getInstance().recalculateActionBar(getActivity(), vertical_offset);
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -165,4 +140,5 @@ public class DashboardFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }
