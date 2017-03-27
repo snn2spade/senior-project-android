@@ -7,6 +7,8 @@ import android.provider.Settings;
 
 import com.seniorproject.snn2spade.seniorproject.manager.Contextor;
 
+import java.text.DecimalFormat;
+
 public class Utils {
 
     private static Utils instance;
@@ -43,6 +45,22 @@ public class Utils {
 
     public int pxToDp(int px) {
         return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public String convertMillionUnit(Double val) {
+        if (val == null) {
+            return "N/A";
+        }
+        val = val / 1000000.0;
+        return new DecimalFormat("###,###.#").format(val).toString();
+    }
+
+    public String convertDoubleToString(Double val) {
+        if (val == null) {
+            return "N/A";
+        } else {
+            return val.toString();
+        }
     }
 
 }

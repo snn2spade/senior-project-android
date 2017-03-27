@@ -7,13 +7,25 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.seniorproject.snn2spade.seniorproject.R;
 import com.seniorproject.snn2spade.seniorproject.adapter.CardViewAdapter;
+import com.seniorproject.snn2spade.seniorproject.dao.HistoricalTradingDao;
+import com.seniorproject.snn2spade.seniorproject.manager.Contextor;
+import com.seniorproject.snn2spade.seniorproject.manager.http.HttpManager;
 import com.seniorproject.snn2spade.seniorproject.util.DynamicScrollbar;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,6 +48,7 @@ public class DashboardFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private CardViewAdapter mAdapter;
+    private List<String> symbolList;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -71,7 +84,44 @@ public class DashboardFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
         initRecyclerView(rootView);
+        symbolList = new ArrayList<>();
+        symbolList.add("ADVANC");
+        symbolList.add("AOT");
+        symbolList.add("CPALL");
+        symbolList.add("KBANK");
+        symbolList.add("PTT");
+        symbolList.add("SCB");
+        symbolList.add("TRUE");
+        initHistoricalTradingListDataSet();
         return rootView;
+    }
+
+    private void initHistoricalTradingListDataSet(){
+        Call<List<HistoricalTradingDao>> call = HttpManager.getInstance().getService()
+                .loadHistoricalTradingBySymbolList(symbolList);
+        call.enqueue(new Callback<List<HistoricalTradingDao>>() {
+            @Override
+            public void onResponse(Call<List<HistoricalTradingDao>> call, Response<List<HistoricalTradingDao>> response) {
+                if(response.isSuccessful()){
+                    List<HistoricalTradingDao> historicalTradingCollection = response.body();
+                    mAdapter.updateList(historicalTradingCollection,symbolList);
+                }
+                else{
+                    Log.e("DashboardFragment",response.errorBody().toString());
+                    Toast.makeText(Contextor.getInstance().getContext(),
+                            response.errorBody().toString(),Toast.LENGTH_LONG)
+                            .show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<HistoricalTradingDao>> call, Throwable t) {
+                Log.e("DashboardFragment",t.toString().toString());
+                Toast.makeText(Contextor.getInstance().getContext(),
+                        t.toString(),Toast.LENGTH_LONG)
+                        .show();
+            }
+        });
     }
 
     private void initRecyclerView(View rootView) {
@@ -83,10 +133,10 @@ public class DashboardFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // this is data fro recycler view
-        String[] test_data_set = {"One", "Two", "Three", "da", "das", "da", "das", "asd", "asd", "ads"};
-
+        List<HistoricalTradingDao> dataSet = new ArrayList<>();
+        List<String> symbolList = new ArrayList<>();
         // 3. create an adapter
-        mAdapter = new CardViewAdapter(test_data_set);
+        mAdapter = new CardViewAdapter(dataSet,symbolList);
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
         // 5. set item animator to DefaultAnimator

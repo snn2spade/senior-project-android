@@ -8,8 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.seniorproject.snn2spade.seniorproject.R;
+import com.seniorproject.snn2spade.seniorproject.dao.HistoricalTradingDao;
 import com.seniorproject.snn2spade.seniorproject.fragment.StockInfoFragment;
 import com.seniorproject.snn2spade.seniorproject.util.Utils;
+import com.seniorproject.snn2spade.seniorproject.util.ViewModifier;
+
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * Created by snn2spade on 3/15/2017 AD.
@@ -18,7 +25,9 @@ import com.seniorproject.snn2spade.seniorproject.util.Utils;
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHolder> {
     private final static int VIEW_TYPE_INDEX_CARD = 0;
     private final static int VIEW_TYPE_STOCK_CARD = 1;
-    private String[] mDataset;
+    private List<HistoricalTradingDao> mDataset;
+    private List<String> mStockSymbolList;
+    private boolean isLayoutInflated = false;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -34,8 +43,9 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public CardViewAdapter(String[] myDataset) {
-        mDataset = myDataset;
+    public CardViewAdapter(List<HistoricalTradingDao> myDataset, List<String> mStockSymbolList) {
+        this.mDataset = myDataset;
+        this.mStockSymbolList = mStockSymbolList;
     }
 
     // Create new views (invoked by the layout manager)
@@ -50,6 +60,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
         }
         CardView v = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(card_layout, parent, false);
+        isLayoutInflated = true;
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -77,7 +88,11 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
             margin.setMargins(margin.leftMargin, margin.topMargin, margin.rightMargin, Utils.getInstance().dpToPx(10));
             cv.setLayoutParams(margin);
         }
-        // tv.setText(mDataset[position]);
+
+        /* change card content */
+        if (position > 0) {
+            updateStockCardContent(holder, position);
+        }
 
         /* Add click listener to stock card */
         holder.mCardView.setOnClickListener(new View.OnClickListener() {
@@ -93,10 +108,56 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
         });
     }
 
+    private void updateStockCardContent(ViewHolder holder, int position) {
+        /* set text */
+        /* --name */
+        ViewModifier.getInstance().setTextView(holder.mCardView, R.id.stock_name,
+                mStockSymbolList.get(position));
+        /* --price */
+        ViewModifier.getInstance().setTextView(holder.mCardView, R.id.stock_price,
+                Utils.getInstance().convertDoubleToString(mDataset.get(position).getClose()));
+        /* --volume */
+        ViewModifier.getInstance().setTextView(holder.mCardView, R.id.stock_volume,
+                Utils.getInstance().convertMillionUnit(mDataset.get(position).getTotalValueBaht()) + " M");
+        /* --change */
+        String change = "";
+        change = change + Utils.getInstance().convertDoubleToString(mDataset.get(position).getChange()).replace("-", "");
+        change = change + " (" + Utils.getInstance().convertDoubleToString(
+                mDataset.get(position).getPercentChange()) + "%)";
+        ViewModifier.getInstance().setTextView(holder.mCardView, R.id.stock_change, change);
+        /* --date */
+        DateFormat df = new SimpleDateFormat("dd MMM yy");
+        String date = "(" + df.format(mDataset.get(position).getDate()) + ")";
+        ViewModifier.getInstance().setTextView(holder.mCardView, R.id.stock_date, date);
+        /* change color */
+        if(mDataset.get(position).getChange() != null) {
+            if (mDataset.get(position).getChange() >= 0) {
+                ViewModifier.getInstance().setColorTextView(holder.mCardView, R.id.stock_change, R.color.colorTrendUp);
+                ViewModifier.getInstance().setImageView(holder.mCardView
+                        , R.id.stock_change_icon
+                        , R.drawable.ic_arrow_up_white_24dp
+                        , R.color.colorTrendUp);
+            } else {
+                ViewModifier.getInstance().setColorTextView(holder.mCardView, R.id.stock_change, R.color.colorTrendDown);
+                ViewModifier.getInstance().setImageView(holder.mCardView
+                        , R.id.stock_change_icon
+                        , R.drawable.ic_arrow_down_white_24dp
+                        , R.color.colorTrendDown);
+            }
+        }
+    }
+
+
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
+    }
+
+    public void updateList(List<HistoricalTradingDao> mDataset, List<String> mStockSymbolList) {
+        this.mDataset = mDataset;
+        this.mStockSymbolList = mStockSymbolList;
+        notifyDataSetChanged();
     }
 }
 
