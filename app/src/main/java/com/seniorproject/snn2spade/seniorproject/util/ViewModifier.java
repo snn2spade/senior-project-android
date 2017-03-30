@@ -28,8 +28,8 @@ public class ViewModifier {
         mContext = Contextor.getInstance().getContext();
     }
 
-    public void setTextView(View v, int item_id, String txt) {
-        TextView tv = (TextView) v.findViewById(item_id);
+    public void setTextView(View rootView, int item_id, String txt) {
+        TextView tv = (TextView) rootView.findViewById(item_id);
         if (tv != null) {
             tv.setText(txt);
         }
@@ -46,7 +46,7 @@ public class ViewModifier {
         }
     }
 
-    public void setImageView(View v, int item_id, int resId, int color) {
+    public void setImageViewWithColorFilter(View v, int item_id, int resId, int color) {
         ImageView iv = (ImageView) v.findViewById(item_id);
         if (iv != null) {
             iv.setImageResource(resId);

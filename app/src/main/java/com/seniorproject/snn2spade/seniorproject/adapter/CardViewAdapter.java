@@ -1,6 +1,9 @@
 package com.seniorproject.snn2spade.seniorproject.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,7 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.seniorproject.snn2spade.seniorproject.R;
+import com.seniorproject.snn2spade.seniorproject.activity.MainActivity;
+import com.seniorproject.snn2spade.seniorproject.activity.StockInfoActivity;
 import com.seniorproject.snn2spade.seniorproject.dao.HistoricalTradingDao;
+import com.seniorproject.snn2spade.seniorproject.fragment.DashboardFragment;
 import com.seniorproject.snn2spade.seniorproject.fragment.StockInfoFragment;
 import com.seniorproject.snn2spade.seniorproject.util.Utils;
 import com.seniorproject.snn2spade.seniorproject.util.ViewModifier;
@@ -17,6 +23,8 @@ import com.seniorproject.snn2spade.seniorproject.util.ViewModifier;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import static android.R.id.message;
 
 /**
  * Created by snn2spade on 3/15/2017 AD.
@@ -27,7 +35,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
     private final static int VIEW_TYPE_STOCK_CARD = 1;
     private List<HistoricalTradingDao> mDataset;
     private List<String> mStockSymbolList;
-    private boolean isLayoutInflated = false;
+    private Fragment mRootFragment;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -43,9 +51,10 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public CardViewAdapter(List<HistoricalTradingDao> myDataset, List<String> mStockSymbolList) {
+    public CardViewAdapter(List<HistoricalTradingDao> myDataset, List<String> mStockSymbolList,Fragment mRootFragment) {
         this.mDataset = myDataset;
         this.mStockSymbolList = mStockSymbolList;
+        this.mRootFragment = mRootFragment;
     }
 
     // Create new views (invoked by the layout manager)
@@ -60,7 +69,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
         }
         CardView v = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(card_layout, parent, false);
-        isLayoutInflated = true;
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -77,7 +85,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder,final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
@@ -89,41 +97,41 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
             cv.setLayoutParams(margin);
         }
 
+
         /* change card content */
         if (position > 0) {
             updateStockCardContent(holder, position);
         }
-
         /* Add click listener to stock card */
-        holder.mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Intent intent = new Intent(v.getContext(), StockInfoActivity.class);
-//                v.getContext().startActivity(intent);
-                ((Activity) v.getContext()).getFragmentManager().beginTransaction()
-                        .add(R.id.fragment_container, StockInfoFragment.newInstance())
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
+        if (position > 0){
+            holder.mCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mRootFragment.getActivity().getBaseContext(), StockInfoActivity.class);
+                    intent.putExtra(DashboardFragment.SYMBOL_MESSAGE, mStockSymbolList.get(position-1));
+                    mRootFragment.getActivity().startActivity(intent);
+                }
+            });
+        }
     }
 
     private void updateStockCardContent(ViewHolder holder, int position) {
+        position = position - 1;
         /* set text */
         /* --name */
         ViewModifier.getInstance().setTextView(holder.mCardView, R.id.stock_name,
                 mStockSymbolList.get(position));
         /* --price */
         ViewModifier.getInstance().setTextView(holder.mCardView, R.id.stock_price,
-                Utils.getInstance().convertDoubleToString(mDataset.get(position).getClose()));
+                Utils.getInstance().convertDoubleToString(mDataset.get(position).getClose(),2));
         /* --volume */
         ViewModifier.getInstance().setTextView(holder.mCardView, R.id.stock_volume,
-                Utils.getInstance().convertMillionUnit(mDataset.get(position).getTotalValueBaht()) + " M");
+                Utils.getInstance().convertMillionUnit(mDataset.get(position).getTotalValueBaht()) + " MB");
         /* --change */
         String change = "";
-        change = change + Utils.getInstance().convertDoubleToString(mDataset.get(position).getChange()).replace("-", "");
+        change = change + Utils.getInstance().convertDoubleToString(mDataset.get(position).getChange(),2).replace("-", "");
         change = change + " (" + Utils.getInstance().convertDoubleToString(
-                mDataset.get(position).getPercentChange()) + "%)";
+                mDataset.get(position).getPercentChange(),1) + "%)";
         ViewModifier.getInstance().setTextView(holder.mCardView, R.id.stock_change, change);
         /* --date */
         DateFormat df = new SimpleDateFormat("dd MMM yy");
@@ -133,13 +141,13 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
         if(mDataset.get(position).getChange() != null) {
             if (mDataset.get(position).getChange() >= 0) {
                 ViewModifier.getInstance().setColorTextView(holder.mCardView, R.id.stock_change, R.color.colorTrendUp);
-                ViewModifier.getInstance().setImageView(holder.mCardView
+                ViewModifier.getInstance().setImageViewWithColorFilter(holder.mCardView
                         , R.id.stock_change_icon
                         , R.drawable.ic_arrow_up_white_24dp
                         , R.color.colorTrendUp);
             } else {
                 ViewModifier.getInstance().setColorTextView(holder.mCardView, R.id.stock_change, R.color.colorTrendDown);
-                ViewModifier.getInstance().setImageView(holder.mCardView
+                ViewModifier.getInstance().setImageViewWithColorFilter(holder.mCardView
                         , R.id.stock_change_icon
                         , R.drawable.ic_arrow_down_white_24dp
                         , R.color.colorTrendDown);

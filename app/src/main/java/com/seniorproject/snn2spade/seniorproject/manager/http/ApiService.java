@@ -21,7 +21,7 @@ public interface ApiService {
     @GET("symbol/getlist")
     Call<List<SymbolDao>> loadSymbolList();
     @GET("historicaltrading/getlimit/{symbol}/{limit}")
-    Call<List<SymbolDao>> loadHistoricalTrading(@Path("symbol") String symbol,@Path("limit") int limit);
+    Call<List<HistoricalTradingDao>> loadHistoricalTrading(@Path("symbol") String symbol,@Path("limit") int limit);
     @FormUrlEncoded
     @POST("historicaltrading/getbysymbollist")
     Call<List<HistoricalTradingDao>> loadHistoricalTradingBySymbolList(@Field("list[]") List<String> symbolList);

@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/stock_card_view"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
+    android:layout_height="130dp"
     android:layout_gravity="center"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
@@ -27,16 +27,16 @@
             android:id="@+id/stock_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/stock_name"
-            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/stock_name"
+            android:layout_marginLeft="10dp"
             android:text="6.25"
-            android:textSize="15sp" />
+            android:textSize="19sp" />
 
         <LinearLayout
             android:id="@+id/stock_change_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/stock_price"
+            android:layout_below="@id/stock_name"
             android:layout_centerVertical="true"
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="1.64 (2.05 %)"
+                android:text="1.64 (+2.05 %)"
                 android:textColor="@color/colorTrendUp"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/stock_change_container"
             android:layout_marginTop="10dp"
-            android:text="3,222.0 M"
+            android:text="3,222.0 MB"
             android:textSize="15sp" />
 
         <TextView

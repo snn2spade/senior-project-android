@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, DashboardFragment.newInstance(""))
+                    .add(R.id.dashboard_fragment_container, DashboardFragment.newInstance(""))
                     .commit();
         }
     }

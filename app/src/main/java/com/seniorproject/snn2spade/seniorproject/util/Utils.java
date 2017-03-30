@@ -8,6 +8,7 @@ import android.provider.Settings;
 import com.seniorproject.snn2spade.seniorproject.manager.Contextor;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 public class Utils {
 
@@ -55,11 +56,34 @@ public class Utils {
         return new DecimalFormat("###,###.#").format(val).toString();
     }
 
-    public String convertDoubleToString(Double val) {
+    public String convertDoubleToString(Double val,int digit) {
         if (val == null) {
             return "N/A";
         } else {
-            return val.toString();
+            try {
+                DecimalFormat nf = new DecimalFormat("###,###");
+                nf.setMaximumFractionDigits(digit);
+                nf.setMinimumFractionDigits(digit);
+                nf.setMinimumIntegerDigits(1);
+                return nf.format(val);
+            }catch (NumberFormatException e){
+                return  "N/A";
+            }
+        }
+    }
+
+    public String insertTrendingSign(String val){
+        try{
+            Double val_d = Double.parseDouble(val);
+            if(val_d>=0){
+                return "+"+val;
+            }
+            else{
+                return val;
+            }
+
+        }catch (NumberFormatException e){
+            return "N/A";
         }
     }
 

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    tools:showIn="@layout/fragment_stock_info">
+
+    <TextView
+        android:id="@+id/his_date"
+        style="@style/sub_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="01/03/1995" />
+
+    <TextView
+        android:id="@+id/his_close"
+        style="@style/sub_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="6.25" />
+
+    <TextView
+        android:id="@+id/his_percent_chg"
+        style="@style/sub_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="+2.5%" />
+
+    <TextView
+        android:id="@+id/his_volume"
+        style="@style/sub_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="2,000.0 MB" />
+</LinearLayout>
