@@ -1,6 +1,8 @@
 package com.seniorproject.snn2spade.seniorproject.fragment;
 
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.seniorproject.snn2spade.seniorproject.R;
+import com.seniorproject.snn2spade.seniorproject.activity.MainActivity;
 import com.seniorproject.snn2spade.seniorproject.adapter.CardViewAdapter;
 import com.seniorproject.snn2spade.seniorproject.dao.HistoricalTradingDao;
 import com.seniorproject.snn2spade.seniorproject.manager.Contextor;
@@ -43,6 +46,7 @@ public class DashboardFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String mParam1;
+    private String mQuery;
 
     private OnFragmentInteractionListener mListener;
 
@@ -63,10 +67,13 @@ public class DashboardFragment extends Fragment {
      * @return A new instance of fragment DashboardFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DashboardFragment newInstance(String param1) {
+    public static DashboardFragment newInstance(String param1,String mQuery) {
         DashboardFragment fragment = new DashboardFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
+        if(mQuery != null){
+            args.putString(MainActivity.ARG_QUERY_STR,mQuery);
+        }
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,6 +84,16 @@ public class DashboardFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
         }
+        mQuery = getArguments().getString(MainActivity.ARG_QUERY_STR);
+        if (mQuery != null && !mQuery.equals("")) {
+            doSearchQuery(mQuery);
+        }
+    }
+
+
+    private void doSearchQuery(String queryStr) {
+        Toast.makeText(getContext(),"do search query :" + queryStr,Toast.LENGTH_LONG).show();
+        Log.d("<Dashboard Fragment>","---------- do search query : "+queryStr);
     }
 
     @Override
@@ -97,29 +114,28 @@ public class DashboardFragment extends Fragment {
         return rootView;
     }
 
-    private void initHistoricalTradingListDataSet(){
+    private void initHistoricalTradingListDataSet() {
         Call<List<HistoricalTradingDao>> call = HttpManager.getInstance().getService()
                 .loadHistoricalTradingBySymbolList(symbolList);
         call.enqueue(new Callback<List<HistoricalTradingDao>>() {
             @Override
             public void onResponse(Call<List<HistoricalTradingDao>> call, Response<List<HistoricalTradingDao>> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     List<HistoricalTradingDao> historicalTradingCollection = response.body();
-                    mAdapter.updateList(historicalTradingCollection,symbolList);
-                }
-                else{
-                    Log.e("DashboardFragment",response.errorBody().toString());
+                    mAdapter.updateList(historicalTradingCollection, symbolList);
+                } else {
+                    Log.e("DashboardFragment", response.errorBody().toString());
                     Toast.makeText(Contextor.getInstance().getContext(),
-                            "Server problem - 404 not found",Toast.LENGTH_LONG)
+                            "Server problem - 404 not found", Toast.LENGTH_LONG)
                             .show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<HistoricalTradingDao>> call, Throwable t) {
-                Log.e("DashboardFragment",t.toString().toString());
+                Log.e("DashboardFragment", t.toString().toString());
                 Toast.makeText(Contextor.getInstance().getContext(),
-                        "Require internet for retrieve data",Toast.LENGTH_LONG)
+                        "Require internet for retrieve data", Toast.LENGTH_LONG)
                         .show();
             }
         });
@@ -137,7 +153,7 @@ public class DashboardFragment extends Fragment {
         List<HistoricalTradingDao> dataSet = new ArrayList<>();
         List<String> symbolList = new ArrayList<>();
         // 3. create an adapter
-        mAdapter = new CardViewAdapter(dataSet,symbolList,this);
+        mAdapter = new CardViewAdapter(dataSet, symbolList, this);
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
         // 5. set item animator to DefaultAnimator

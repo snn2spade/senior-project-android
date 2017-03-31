@@ -84,5 +84,14 @@ public class StockInfoAdapter {
             hisTradingCard.addView(his_row);
         }
         /* financial statement card */
+        LinearLayout financialStCard = (LinearLayout) mRootView.findViewById(R.id.info_financialStatementCard);
+        financialStCard.removeViewAt(1);
+        FourColumnRowViewGroup fin_row1 = new FourColumnRowViewGroup(mRootView.getContext());
+        fin_row1.setTextPair1("P/E",Utils.getInstance().convertDoubleToString(mDataSet.get(0).getpE(),2));
+        fin_row1.setTextPair2("P/BV",Utils.getInstance().convertDoubleToString(mDataSet.get(0).getpBv(),2));
+        FourColumnRowViewGroup fin_row2 = new FourColumnRowViewGroup(mRootView.getContext());
+        fin_row2.setTextPair1("Yield",Utils.getInstance().convertDoubleToString(mDataSet.get(0).getDividedYield(),2)+" %");
+        financialStCard.addView(fin_row1);
+        financialStCard.addView(fin_row2);
     }
 }
