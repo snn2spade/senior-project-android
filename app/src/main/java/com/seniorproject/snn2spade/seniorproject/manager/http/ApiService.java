@@ -1,5 +1,6 @@
 package com.seniorproject.snn2spade.seniorproject.manager.http;
 
+import com.seniorproject.snn2spade.seniorproject.dao.PredictStockDao;
 import com.seniorproject.snn2spade.seniorproject.dao.SymbolDao;
 import com.seniorproject.snn2spade.seniorproject.dao.HistoricalTradingDao;
 
@@ -25,4 +26,6 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("historicaltrading/getbysymbollist")
     Call<List<HistoricalTradingDao>> loadHistoricalTradingBySymbolList(@Field("list[]") List<String> symbolList);
+    @GET("predictstock/getpredictlist")
+    Call<List<PredictStockDao>> loadPredictStockList();
 }

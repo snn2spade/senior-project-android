@@ -3,8 +3,10 @@ package com.seniorproject.snn2spade.seniorproject.util;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.text.Layout;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.seniorproject.snn2spade.seniorproject.manager.Contextor;
@@ -42,6 +44,17 @@ public class ViewModifier {
                 tv.setTextColor(mContext.getColor(color));
             } else {
                 tv.setTextColor(mContext.getResources().getColor(color));
+            }
+        }
+    }
+
+    public void setBackgroundColorLayout(View v, int item_id, int color_id) {
+        LinearLayout layout = (LinearLayout) v.findViewById(item_id);
+        if (layout != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                layout.setBackgroundColor(mContext.getColor(color_id));
+            } else {
+                layout.setBackgroundColor(mContext.getResources().getColor(color_id));
             }
         }
     }

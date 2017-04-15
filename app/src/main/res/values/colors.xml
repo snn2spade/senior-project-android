@@ -5,4 +5,5 @@
     <color name="colorTrendUp">#A0D468</color>
     <color name="colorTrendDown">#D46868</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="white">#FFFFFF</color>
 </resources>

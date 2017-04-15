@@ -52,12 +52,12 @@ public class StockInfoFragment extends Fragment {
         if (mSymbol == null) {
             Toast.makeText(getActivity(), "mSymbol is null", Toast.LENGTH_LONG).show();
         } else {
-            connectApiToRetriveDataSet();
+            connectApiToRetrieveDataSet();
         }
         return rootView;
     }
 
-    public void connectApiToRetriveDataSet() {
+    public void connectApiToRetrieveDataSet() {
         Call<List<HistoricalTradingDao>> call = HttpManager.getInstance().getService().loadHistoricalTrading(mSymbol, 5);
         call.enqueue(new Callback<List<HistoricalTradingDao>>() {
             @Override

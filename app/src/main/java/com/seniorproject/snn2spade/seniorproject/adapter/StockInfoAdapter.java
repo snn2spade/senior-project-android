@@ -37,7 +37,7 @@ public class StockInfoAdapter {
     private void updateContent() {
         /* top section */
         /* -- symbol */
-        ViewModifier.getInstance().setTextView(mRootView, R.id.info_symbol, mSymbol);
+        ViewModifier.getInstance().setTextView(mRootView, R.id.info_symbol, mSymbol.toUpperCase());
         /* -- close */
         ViewModifier.getInstance().setTextView(mRootView, R.id.info_close,
                 Utils.getInstance().convertDoubleToString(mDataSet.get(0).getClose(), 2));
@@ -47,7 +47,23 @@ public class StockInfoAdapter {
         change = change + " (" + Utils.getInstance().convertDoubleToString(
                 mDataSet.get(0).getPercentChange(), 1) + "%)";
         ViewModifier.getInstance().setTextView(mRootView, R.id.info_chg, change);
-        /* -- volumne */
+        /* change color */
+        if (mDataSet.get(0).getChange() != null) {
+            if (mDataSet.get(0).getChange() >= 0) {
+                ViewModifier.getInstance().setColorTextView(mRootView, R.id.info_chg, R.color.colorTrendUp);
+                ViewModifier.getInstance().setImageViewWithColorFilter(mRootView
+                        , R.id.info_change_icon
+                        , R.drawable.ic_arrow_up_white_24dp
+                        , R.color.colorTrendUp);
+            } else {
+                ViewModifier.getInstance().setColorTextView(mRootView, R.id.info_chg, R.color.colorTrendDown);
+                ViewModifier.getInstance().setImageViewWithColorFilter(mRootView
+                        , R.id.info_change_icon
+                        , R.drawable.ic_arrow_down_white_24dp
+                        , R.color.colorTrendDown);
+            }
+        }
+        /* -- volume */
         ViewModifier.getInstance().setTextView(mRootView, R.id.info_vol,
                 Utils.getInstance().convertMillionUnit(mDataSet.get(0).getTotalValueBaht()) + " MB");
         /* -- date */
