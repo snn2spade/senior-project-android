@@ -14,6 +14,7 @@ import com.seniorproject.snn2spade.seniorproject.view.HisTradingRowViewGroup;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by snn2spade on 3/30/2017 AD.
@@ -21,16 +22,19 @@ import java.util.List;
 
 public class StockInfoAdapter {
     private String mSymbol;
+    private Boolean mPredict;
     private List<HistoricalTradingDao> mDataSet;
+
     private View mRootView;
 
     public StockInfoAdapter(View mRootView) {
         this.mRootView = mRootView;
     }
 
-    public void updateDataSet(String mSymbol, List<HistoricalTradingDao> mDataSet) {
+    public void updateDataSet(String mSymbol, List<HistoricalTradingDao> mDataSet,Boolean mPredict) {
         this.mSymbol = mSymbol;
         this.mDataSet = mDataSet;
+        this.mPredict = mPredict;
         updateContent();
     }
 
@@ -109,5 +113,16 @@ public class StockInfoAdapter {
         fin_row2.setTextPair1("Yield",Utils.getInstance().convertDoubleToString(mDataSet.get(0).getDividedYield(),2)+" %");
         financialStCard.addView(fin_row1);
         financialStCard.addView(fin_row2);
+        /* predict card */
+        if(mPredict!=null){
+            if(mPredict){
+                ViewModifier.getInstance().setTextView(mRootView,R.id.info_predict,"YES");
+                ViewModifier.getInstance().setBackgroundColorLayout(mRootView,R.id.info_predict_container,R.color.colorTrendUp);
+            }
+            else{
+                ViewModifier.getInstance().setTextView(mRootView,R.id.info_predict,"NO");
+                ViewModifier.getInstance().setBackgroundColorLayout(mRootView,R.id.info_predict_container,R.color.colorTrendDown);
+            }
+        }
     }
 }

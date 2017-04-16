@@ -35,7 +35,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.1" />
+            android:layout_weight="0.05" />
 
         <ImageButton
             android:id="@+id/help_icon"
@@ -44,13 +44,17 @@
             android:background="@android:color/transparent"
             android:src="@drawable/ic_help_white_24dp" />
 
-        <ImageButton
-            android:id="@+id/menu_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="13dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_menu_white_24dp" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.05" />
+        <!--<ImageButton-->
+            <!--android:id="@+id/menu_icon"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="13dp"-->
+            <!--android:background="@android:color/transparent"-->
+            <!--android:src="@drawable/ic_menu_white_24dp" />-->
     </LinearLayout>
 
     <FrameLayout

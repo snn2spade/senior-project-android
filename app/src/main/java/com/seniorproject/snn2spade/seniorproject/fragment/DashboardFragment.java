@@ -34,6 +34,7 @@ public class DashboardFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     public static final String SYMBOL_MESSAGE = "symbol";
+    public static final String PREDICT_MESSAGE = "predict";
 
     // TODO: Rename and change types of parameters
     private String mParam1;

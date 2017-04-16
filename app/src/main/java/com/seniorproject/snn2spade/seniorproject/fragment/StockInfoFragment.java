@@ -8,9 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.seniorproject.snn2spade.seniorproject.R;
+import com.seniorproject.snn2spade.seniorproject.activity.FinancialStatementActivity;
+import com.seniorproject.snn2spade.seniorproject.activity.StockInfoActivity;
 import com.seniorproject.snn2spade.seniorproject.adapter.StockInfoAdapter;
 import com.seniorproject.snn2spade.seniorproject.dao.HistoricalTradingDao;
 import com.seniorproject.snn2spade.seniorproject.manager.Contextor;
@@ -29,6 +32,7 @@ import retrofit2.Response;
 public class StockInfoFragment extends Fragment {
     private StockInfoAdapter mAdapter;
     private String mSymbol;
+    private Boolean mPredict;
 
     public static StockInfoFragment newInstance() {
         Bundle args = new Bundle();
@@ -42,6 +46,7 @@ public class StockInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
             Intent intent = getActivity().getIntent();
             mSymbol = intent.getStringExtra(DashboardFragment.SYMBOL_MESSAGE);
+            mPredict = intent.getBooleanExtra(DashboardFragment.PREDICT_MESSAGE,true);
     }
 
     @Nullable
@@ -54,7 +59,20 @@ public class StockInfoFragment extends Fragment {
         } else {
             connectApiToRetrieveDataSet();
         }
+        initFinancialStatementListener(rootView);
         return rootView;
+    }
+
+    private void initFinancialStatementListener(View rootView) {
+        LinearLayout finStatementCard = (LinearLayout) rootView.findViewById(R.id.info_financialStatementCard);
+        finStatementCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getBaseContext(), FinancialStatementActivity.class);
+                intent.putExtra(FinancialStatementActivity.SYMBOL_MESSAGE, mSymbol);
+                getActivity().startActivity(intent);
+            }
+        });
     }
 
     public void connectApiToRetrieveDataSet() {
@@ -64,7 +82,7 @@ public class StockInfoFragment extends Fragment {
             public void onResponse(Call<List<HistoricalTradingDao>> call, Response<List<HistoricalTradingDao>> response) {
                 if (response.isSuccessful()) {
                     List<HistoricalTradingDao> hisTradingCollection = response.body();
-                    mAdapter.updateDataSet(mSymbol, hisTradingCollection);
+                    mAdapter.updateDataSet(mSymbol, hisTradingCollection,mPredict);
                 } else {
                     Log.e("StockInfoFragment", response.errorBody().toString());
                     Toast.makeText(Contextor.getInstance().getContext(),

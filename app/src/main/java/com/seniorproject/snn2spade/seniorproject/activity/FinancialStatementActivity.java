@@ -1,33 +1,38 @@
 package com.seniorproject.snn2spade.seniorproject.activity;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.seniorproject.snn2spade.seniorproject.R;
 import com.seniorproject.snn2spade.seniorproject.fragment.FinancialPositionFragment;
-import com.seniorproject.snn2spade.seniorproject.fragment.StockInfoFragment;
 
 /**
- * Created by snn2spade on 3/18/2017 AD.
+ * Created by snn2spade on 4/16/2017 AD.
  */
 
-public class StockInfoActivity extends AppCompatActivity {
+public class FinancialStatementActivity extends AppCompatActivity implements FinancialPositionFragment.OnFragmentInteractionListener {
+    public static final String SYMBOL_MESSAGE = "symbol";
+
+    private FinancialPositionFragment mFinancialPositionFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stock_info);
+        setContentView(R.layout.activity_financial_statement);
+
 
         if (savedInstanceState == null) {
+            mFinancialPositionFragment = FinancialPositionFragment.newInstance("","");
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.stockInfo_fragment_container,StockInfoFragment.newInstance())
+                    .add(R.id.fragment_container, mFinancialPositionFragment)
                     .commit();
         }
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

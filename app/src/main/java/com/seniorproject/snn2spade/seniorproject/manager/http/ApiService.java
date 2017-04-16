@@ -3,6 +3,7 @@ package com.seniorproject.snn2spade.seniorproject.manager.http;
 import com.seniorproject.snn2spade.seniorproject.dao.PredictStockDao;
 import com.seniorproject.snn2spade.seniorproject.dao.SymbolDao;
 import com.seniorproject.snn2spade.seniorproject.dao.HistoricalTradingDao;
+import com.seniorproject.snn2spade.seniorproject.dao.financialStatement.FinancialStatementDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,4 +29,6 @@ public interface ApiService {
     Call<List<HistoricalTradingDao>> loadHistoricalTradingBySymbolList(@Field("list[]") List<String> symbolList);
     @GET("predictstock/getpredictlist")
     Call<List<PredictStockDao>> loadPredictStockList();
+    @GET("financialstatement/getfinancialpos/yearly/{symbol}")
+    Call<FinancialStatementDao> loadFinancialPosition(@Path(("symbol")) String symbol);
 }

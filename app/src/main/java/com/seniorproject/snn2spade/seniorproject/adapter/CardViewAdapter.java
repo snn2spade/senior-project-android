@@ -1,12 +1,6 @@
 package com.seniorproject.snn2spade.seniorproject.adapter;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -15,11 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.seniorproject.snn2spade.seniorproject.R;
-import com.seniorproject.snn2spade.seniorproject.activity.MainActivity;
 import com.seniorproject.snn2spade.seniorproject.activity.StockInfoActivity;
 import com.seniorproject.snn2spade.seniorproject.dao.HistoricalTradingDao;
 import com.seniorproject.snn2spade.seniorproject.fragment.DashboardFragment;
-import com.seniorproject.snn2spade.seniorproject.fragment.StockInfoFragment;
 import com.seniorproject.snn2spade.seniorproject.util.Utils;
 import com.seniorproject.snn2spade.seniorproject.util.ViewModifier;
 
@@ -28,8 +20,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
-
-import static android.R.id.message;
 
 /**
  * Created by snn2spade on 3/15/2017 AD.
@@ -42,8 +32,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
     private List<String> mStockSymbolList;
     private Map<String,Boolean> mPredictStockResult;
     private Fragment mRootFragment;
-
-
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -73,9 +61,9 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
         // create a new view
         int card_layout = 0;
         if (viewType == CardViewAdapter.VIEW_TYPE_INDEX_CARD) {
-            card_layout = R.layout.index_card_view;
+            card_layout = R.layout.cardview_index;
         } else if (viewType == CardViewAdapter.VIEW_TYPE_STOCK_CARD) {
-            card_layout = R.layout.stock_card_view;
+            card_layout = R.layout.cardview_stock;
         }
         CardView v = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(card_layout, parent, false);
@@ -112,6 +100,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
             public void onClick(View v) {
                 Intent intent = new Intent(mRootFragment.getActivity().getBaseContext(), StockInfoActivity.class);
                 intent.putExtra(DashboardFragment.SYMBOL_MESSAGE, mStockSymbolList.get(position));
+                intent.putExtra(DashboardFragment.PREDICT_MESSAGE,mPredictStockResult.get(mStockSymbolList.get(position)));
                 mRootFragment.getActivity().startActivity(intent);
             }
         });

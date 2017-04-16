@@ -27,6 +27,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity android:name=".activity.StockInfoActivity"></activity>
+        <activity android:name=".activity.FinancialStatementActivity"></activity>
     </application>
 
 </manifest>

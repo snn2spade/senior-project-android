@@ -27,7 +27,8 @@
                     style="@style/StockSymbol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TRUE" />
+                    android:text="" />
+                <!--TRUE-->
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -41,7 +42,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="6.25" />
+                        android:text="0.00" />
+                    <!--6.25-->
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -61,7 +63,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:text="1.64 (+2.05 %)" />
+                            android:text="0.00 (+0.00 %)" />
+                        <!--1.64 (+2.05 %)-->
                     </LinearLayout>
                 </LinearLayout>
 
@@ -71,7 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="3,333.0 MB" />
+                    android:text="0.0 MB" />
 
                 <TextView
                     android:id="@+id/info_date"
@@ -79,7 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="(17 Mar 17)" />
+                    android:text="(00 Mar 00)" />
             </LinearLayout>
 
             <RelativeLayout
@@ -87,10 +90,10 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
+                    android:id="@+id/info_predict_container"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_alignParentRight="true"
-                    android:background="@color/colorTrendUp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -115,22 +118,24 @@
                             android:src="@drawable/ic_trending_up_white_24dp" />
 
                         <TextView
+                            android:id="@+id/info_predict"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="5dp"
                             android:gravity="center"
-                            android:text="YES"
+                            android:text="N/A"
                             android:textColor="@android:color/white"
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="22 %"
-                        android:textColor="@android:color/white"
-                        android:textSize="11sp" />
+                    <!--<TextView-->
+                    <!--android:id="@+id/textView"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:text="22 %"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="11sp" />-->
 
                 </LinearLayout>
             </RelativeLayout>
