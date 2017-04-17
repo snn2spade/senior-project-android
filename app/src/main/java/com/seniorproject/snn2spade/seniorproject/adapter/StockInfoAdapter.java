@@ -1,6 +1,5 @@
 package com.seniorproject.snn2spade.seniorproject.adapter;
 
-import android.app.Fragment;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -14,7 +13,6 @@ import com.seniorproject.snn2spade.seniorproject.view.HisTradingRowViewGroup;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by snn2spade on 3/30/2017 AD.

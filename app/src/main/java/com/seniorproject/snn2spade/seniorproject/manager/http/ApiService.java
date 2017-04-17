@@ -5,7 +5,6 @@ import com.seniorproject.snn2spade.seniorproject.dao.SymbolDao;
 import com.seniorproject.snn2spade.seniorproject.dao.HistoricalTradingDao;
 import com.seniorproject.snn2spade.seniorproject.dao.financialStatement.FinancialStatementDao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -31,4 +30,8 @@ public interface ApiService {
     Call<List<PredictStockDao>> loadPredictStockList();
     @GET("financialstatement/getfinancialpos/yearly/{symbol}")
     Call<FinancialStatementDao> loadFinancialPosition(@Path(("symbol")) String symbol);
+    @GET("financialstatement/getcomincome/yearly/{symbol}")
+    Call<FinancialStatementDao> loadComprehensiveIncome(@Path(("symbol")) String symbol);
+    @GET("financialstatement/getcashflow/yearly/{symbol}")
+    Call<FinancialStatementDao> loadCashFlow(@Path(("symbol")) String symbol);
 }

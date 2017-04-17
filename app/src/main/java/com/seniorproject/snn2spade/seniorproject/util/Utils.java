@@ -8,7 +8,6 @@ import android.provider.Settings;
 import com.seniorproject.snn2spade.seniorproject.manager.Contextor;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 public class Utils {
 

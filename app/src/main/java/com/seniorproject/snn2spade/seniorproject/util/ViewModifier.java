@@ -1,9 +1,7 @@
 package com.seniorproject.snn2spade.seniorproject.util;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
-import android.text.Layout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;

@@ -148,7 +148,10 @@ public class DashboardFragment extends Fragment {
         mListener = null;
     }
 
-
+    public void scrollToTop() {
+        mLayoutManager.scrollToPositionWithOffset(0, 0);
+//        mRecyclerView.smoothScrollToPosition(0);
+    }
 
     /**
      * This interface must be implemented by activities that contain this

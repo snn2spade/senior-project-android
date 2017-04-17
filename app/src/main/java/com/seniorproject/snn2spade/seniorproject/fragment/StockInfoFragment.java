@@ -8,16 +8,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.seniorproject.snn2spade.seniorproject.R;
 import com.seniorproject.snn2spade.seniorproject.activity.FinancialStatementActivity;
-import com.seniorproject.snn2spade.seniorproject.activity.StockInfoActivity;
 import com.seniorproject.snn2spade.seniorproject.adapter.StockInfoAdapter;
 import com.seniorproject.snn2spade.seniorproject.dao.HistoricalTradingDao;
 import com.seniorproject.snn2spade.seniorproject.manager.Contextor;
 import com.seniorproject.snn2spade.seniorproject.manager.http.HttpManager;
+import com.seniorproject.snn2spade.seniorproject.util.DynamicScrollbar;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;
 
@@ -44,9 +47,14 @@ public class StockInfoFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            Intent intent = getActivity().getIntent();
-            mSymbol = intent.getStringExtra(DashboardFragment.SYMBOL_MESSAGE);
-            mPredict = intent.getBooleanExtra(DashboardFragment.PREDICT_MESSAGE,true);
+        Intent intent = getActivity().getIntent();
+        mSymbol = intent.getStringExtra(DashboardFragment.SYMBOL_MESSAGE);
+        mPredict = intent.getBooleanExtra(DashboardFragment.PREDICT_MESSAGE, true);
+        if (mSymbol == null) {
+            // Toast.makeText(getActivity(), "mSymbol is null", Toast.LENGTH_LONG).show();
+        } else {
+            connectApiToRetrieveDataSet();
+        }
     }
 
     @Nullable
@@ -54,13 +62,21 @@ public class StockInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_stock_info, container, false);
         mAdapter = new StockInfoAdapter(rootView);
-        if (mSymbol == null) {
-            Toast.makeText(getActivity(), "mSymbol is null", Toast.LENGTH_LONG).show();
-        } else {
-            connectApiToRetrieveDataSet();
-        }
         initFinancialStatementListener(rootView);
+        initScrollListener(rootView);
         return rootView;
+    }
+
+    private void initScrollListener(final View rootView) {
+        final ScrollView sv = (ScrollView) rootView.findViewById(R.id.fin_scroll_view);
+        sv.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                int scrollY = sv.getScrollY();
+                int scrollX = sv.getScrollX();
+                DynamicScrollbar.getInstance().recalculateActionBar(getActivity(), scrollY);
+            }
+        });
     }
 
     private void initFinancialStatementListener(View rootView) {
@@ -82,7 +98,9 @@ public class StockInfoFragment extends Fragment {
             public void onResponse(Call<List<HistoricalTradingDao>> call, Response<List<HistoricalTradingDao>> response) {
                 if (response.isSuccessful()) {
                     List<HistoricalTradingDao> hisTradingCollection = response.body();
-                    mAdapter.updateDataSet(mSymbol, hisTradingCollection,mPredict);
+                    mAdapter.updateDataSet(mSymbol, hisTradingCollection, mPredict);
+                    AVLoadingIndicatorView loading_icon = (AVLoadingIndicatorView) getActivity().findViewById(R.id.loadingIcon);
+                    loading_icon.smoothToHide();
                 } else {
                     Log.e("StockInfoFragment", response.errorBody().toString());
                     Toast.makeText(Contextor.getInstance().getContext(),

@@ -7,4 +7,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="white">#FFFFFF</color>
     <color name="yellow">#f1e271</color>
+    <color name="darkGrey">@android:color/darker_gray</color>
+    <color name="brown_background">#80706F</color>
 </resources>

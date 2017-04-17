@@ -3,16 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/brown_background"
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/action_bar_container"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@color/colorPrimary"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <View
+        <ImageView
+            android:scaleType="centerCrop"
+            android:src="@drawable/senior_logo"
             android:id="@+id/logo_icon"
             android:layout_width="80dp"
             android:layout_height="match_parent"
@@ -23,37 +27,48 @@
             android:layout_height="match_parent"
             android:layout_weight="0.1" />
 
-        <EditText
+        <SearchView
+            android:id="@+id/search_bar"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:layout_weight="0.8"
-            android:background="@android:color/white"
-            android:inputType="textCapWords" />
+            android:background="@android:color/white" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.1" />
+            android:layout_weight="0.05" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/help_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_help_white_24dp" />
 
-        <ImageButton
-            android:id="@+id/menu_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="13dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_menu_white_24dp" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.05" />
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/stockInfo_fragment_container"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent">
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:layout_centerHorizontal="true"
+            android:id="@+id/loadingIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:indicatorColor="@color/colorTrendDown"
+            app:indicatorName="@string/loading_icon" />
+
+        <FrameLayout
+            android:id="@+id/stockInfo_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </RelativeLayout>
 </LinearLayout>

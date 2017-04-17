@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -28,13 +28,11 @@ import com.seniorproject.snn2spade.seniorproject.manager.http.HttpManager;
 import com.seniorproject.snn2spade.seniorproject.util.DynamicScrollbar;
 import com.seniorproject.snn2spade.seniorproject.util.Utils;
 import com.seniorproject.snn2spade.seniorproject.view.FinancialStatementCardViewGroup;
+import com.wang.avi.AVLoadingIndicatorView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,19 +47,21 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class FinancialPositionFragment extends Fragment {
+    public static final int FIN_POS_TYPE = 1;
+    public static final int COMP_INCOME_TYPE = 2;
+    public static final int CASH_FLOW_TYPE = 3;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
     private String mSymbol;
     private FinancialStatementDao mFinancialStatementDao;
+    private int mSheetType;
 
     public FinancialPositionFragment() {
         // Required empty public constructor
@@ -71,15 +71,14 @@ public class FinancialPositionFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
      * @param param2 Parameter 2.
      * @return A new instance of fragment FinancialPositionFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static FinancialPositionFragment newInstance(String param1, String param2) {
+    public static FinancialPositionFragment newInstance(int mSheetType, String param2) {
         FinancialPositionFragment fragment = new FinancialPositionFragment();
+        fragment.mSheetType = mSheetType;
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -89,7 +88,6 @@ public class FinancialPositionFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         Intent intent = getActivity().getIntent();
@@ -101,12 +99,14 @@ public class FinancialPositionFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_financial_position, container, false);
-        retrieveFinancialStatementData(rootView, mSymbol);
+        retrieveFinancialStatementData(rootView, mSymbol,mSheetType);
         initScrollListener(rootView);
         return rootView;
     }
 
-    private void initScrollListener(View rootView ) {
+
+
+    private void initScrollListener(final View rootView ) {
         final ScrollView sv = (ScrollView) rootView.findViewById(R.id.fin_scroll_view);
         sv.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
@@ -120,13 +120,29 @@ public class FinancialPositionFragment extends Fragment {
     }
 
 
-    private void retrieveFinancialStatementData(final View rootView, String mSymbol) {
-        Call<FinancialStatementDao> call = HttpManager.getInstance().getService()
-                .loadFinancialPosition(mSymbol);
+    private void retrieveFinancialStatementData(final View rootView, String mSymbol,int sheet_type) {
+        Call<FinancialStatementDao> call;
+        switch (sheet_type){
+            case FIN_POS_TYPE:
+                call = HttpManager.getInstance().getService().loadFinancialPosition(mSymbol);
+                break;
+            case COMP_INCOME_TYPE:
+                call = HttpManager.getInstance().getService().loadComprehensiveIncome(mSymbol);
+                break;
+            case CASH_FLOW_TYPE:
+                call = HttpManager.getInstance().getService().loadCashFlow(mSymbol);
+                break;
+            default:
+                call = HttpManager.getInstance().getService().loadFinancialPosition(mSymbol);
+                break;
+
+        }
         call.enqueue(new Callback<FinancialStatementDao>() {
             @Override
             public void onResponse(Call<FinancialStatementDao> call, Response<FinancialStatementDao> response) {
                 if (response.isSuccessful()) {
+                    AVLoadingIndicatorView loading_icon = (AVLoadingIndicatorView) getActivity().findViewById(R.id.loadingIcon);
+                    loading_icon.smoothToHide();
                     FinancialStatementDao financialStatement = response.body();
                     mFinancialStatementDao = financialStatement;
                     Collections.reverse(mFinancialStatementDao.getYear_doc_list());
@@ -159,11 +175,11 @@ public class FinancialPositionFragment extends Fragment {
         for (int attr_idx = 0; attr_idx < numberOfAttribute; attr_idx++) {
             FinancialStatementCardViewGroup finStatementViewGroup = new FinancialStatementCardViewGroup(getContext());
             /* add bottom space for last item */
-//            if (attr_idx == (numberOfAttribute - 1)) {
-//                ViewGroup.MarginLayoutParams margin = (ViewGroup.MarginLayoutParams) finStatementViewGroup.getLayoutParams();
-//                margin.setMargins(margin.leftMargin, margin.topMargin, margin.rightMargin, Utils.getInstance().dpToPx(10));
-//                finStatementViewGroup.setLayoutParams(margin);
-//            }
+            if (attr_idx == (numberOfAttribute - 1)) {
+                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(0,0, 0, Utils.getInstance().dpToPx(10));
+                finStatementViewGroup.setLayoutParams(lp);
+            }
             /* set attr name */
             String attr_name = mFinancialStatementDao.getYear_doc_list().get(0).getAttr_list().get(attr_idx).getAttr_name();
             finStatementViewGroup.setAttributeName(attr_name);

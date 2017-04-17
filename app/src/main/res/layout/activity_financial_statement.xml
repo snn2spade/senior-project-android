@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/brown_background"
     android:orientation="vertical"
     tools:context=".activity.MainActivity">
 
@@ -14,7 +15,9 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <View
+        <ImageView
+            android:scaleType="centerCrop"
+            android:src="@drawable/senior_logo"
             android:id="@+id/logo_icon"
             android:layout_width="80dp"
             android:layout_height="match_parent"
@@ -37,7 +40,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.05" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/help_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,32 +57,51 @@
         android:layout_width="match_parent"
         android:layout_height="35dp">
 
-        <ImageView
+        <TextView
             android:id="@+id/fin_fin_pos_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/colorPrimary" />
+            android:background="@color/colorTrendDown"
+            android:gravity="center"
+            android:text="Financial Pos"
+            android:textAlignment="center"
+            android:textStyle="bold|italic" />
 
-        <ImageView
+        <TextView
             android:id="@+id/fin_comp_inc_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/colorTrendDown" />
+            android:background="@android:color/darker_gray"
+            android:gravity="center"
+            android:text="Income sheet"
+            android:textAlignment="center"
+            android:textStyle="bold|italic" />
 
-        <ImageView
+        <TextView
             android:id="@+id/fin_cash_flow_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@android:color/darker_gray" />
+            android:background="@android:color/darker_gray"
+            android:gravity="center"
+            android:text="Cash flow"
+            android:textAlignment="center"
+            android:textStyle="bold|italic" />
 
 
     </LinearLayout>
 
-    <FrameLayout
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/loadingIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:indicatorColor="@color/colorTrendDown"
+        app:indicatorName="@string/loading_icon" />
 
+    <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -87,5 +109,6 @@
 
         <include layout="@layout/fragment_financial_position" />
     </FrameLayout>
+
 
 </LinearLayout>

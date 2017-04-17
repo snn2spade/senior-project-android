@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import com.seniorproject.snn2spade.seniorproject.dao.PredictStockDao;
 import com.seniorproject.snn2spade.seniorproject.fragment.DashboardFragment;
 import com.seniorproject.snn2spade.seniorproject.manager.Contextor;
 import com.seniorproject.snn2spade.seniorproject.manager.http.HttpManager;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initSearchBarListener();
+        initHelpIconClickListener();
         mDashboardFragment = DashboardFragment.newInstance("");
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -47,6 +51,24 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         mPredictStock = new HashMap<>();
         initPredictStockResultList();
         handleIntent(getIntent());
+    }
+
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        return super.onCreateView(name, context, attrs);
+    }
+
+    private void initHelpIconClickListener(){
+        ImageView helpView = (ImageView) findViewById(R.id.help_icon);
+        helpView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDashboardFragment.scrollToTop();
+                Intent tutorialIntent = new Intent(getBaseContext(),TutorialActivity.class);
+                tutorialIntent.putExtra(TutorialActivity.TUTORIAL_TYPE_MESSAGE,TutorialActivity.HOME_TUTORIAL);
+                startActivity(tutorialIntent);
+            }
+        });
     }
 
     private void initSearchBarListener() {
@@ -78,13 +100,32 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         }
         else{
             List<String> symbol_list = new ArrayList<>();
-            symbol_list.add("ADVANC");
-            symbol_list.add("AOT");
-            symbol_list.add("CPALL");
-            symbol_list.add("KBANK");
-            symbol_list.add("PTT");
+            symbol_list.add("GFPT");
+            symbol_list.add("CPF");
+            symbol_list.add("SUC");
+            symbol_list.add("KYE");
+            symbol_list.add("S&J");
             symbol_list.add("SCB");
-            symbol_list.add("TRUE");
+            symbol_list.add("BLA");
+            symbol_list.add("SCB");
+            symbol_list.add("AEC");
+            symbol_list.add("STANLY");
+            symbol_list.add("CTW");
+            symbol_list.add("UTP");
+            symbol_list.add("PTL");
+            symbol_list.add("PTTGC");
+            symbol_list.add("INOX");
+            symbol_list.add("SCC");
+            symbol_list.add("CPN");
+            symbol_list.add("PTT");
+            symbol_list.add("PDI");
+            symbol_list.add("CPALL");
+            symbol_list.add("BDMS");
+            symbol_list.add("BEC");
+            symbol_list.add("CENTEL");
+            symbol_list.add("AOT");
+            symbol_list.add("DELTA");
+            symbol_list.add("ADVANC");
             initHistoricalTradingListDataSet(symbol_list);
         }
     }
@@ -98,6 +139,8 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
                 if (response.isSuccessful()) {
                     List<HistoricalTradingDao> historicalTradingCollection = response.body();
                     if(historicalTradingCollection.size() !=0){
+                        AVLoadingIndicatorView loading_icon = (AVLoadingIndicatorView) findViewById(R.id.loadingIcon);
+                        loading_icon.smoothToHide();
                         mSymbolList = symbol_list;
                         mDashboardFragment.updateDataSet(historicalTradingCollection,mSymbolList);
                     }

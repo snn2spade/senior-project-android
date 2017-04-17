@@ -14,7 +14,9 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <View
+        <ImageView
+            android:scaleType="centerCrop"
+            android:src="@drawable/senior_logo"
             android:id="@+id/logo_icon"
             android:layout_width="80dp"
             android:layout_height="match_parent"
@@ -28,16 +30,16 @@
         <SearchView
             android:id="@+id/search_bar"
             android:layout_width="0dp"
+            android:layout_height="40dp"
             android:layout_weight="0.8"
-            android:background="@android:color/white"
-            android:layout_height="40dp"/>
+            android:background="@android:color/white" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.05" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/help_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,13 +51,22 @@
             android:layout_height="match_parent"
             android:layout_weight="0.05" />
         <!--<ImageButton-->
-            <!--android:id="@+id/menu_icon"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="13dp"-->
-            <!--android:background="@android:color/transparent"-->
-            <!--android:src="@drawable/ic_menu_white_24dp" />-->
+        <!--android:id="@+id/menu_icon"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="13dp"-->
+        <!--android:background="@android:color/transparent"-->
+        <!--android:src="@drawable/ic_menu_white_24dp" />-->
     </LinearLayout>
+
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:layout_gravity="center"
+        android:id="@+id/loadingIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:indicatorColor="@color/colorTrendDown"
+        app:indicatorName="@string/loading_icon" />
 
     <FrameLayout
         android:id="@+id/dashboard_fragment_container"
