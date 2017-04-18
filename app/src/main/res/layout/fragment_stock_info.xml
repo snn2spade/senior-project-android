@@ -1,8 +1,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fin_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/brown_background"
     android:fillViewport="true"
-    android:id="@+id/fin_scroll_view"
     android:scrollbars="vertical">
 
     <LinearLayout
@@ -153,7 +154,8 @@
                 style="@style/head_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trading information" />
+                android:text="Trading information"
+                android:textStyle="bold" />
 
             <include layout="@layout/viewgroup_four_column_row" />
         </LinearLayout>
@@ -170,7 +172,8 @@
                 style="@style/head_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Historical trading" />
+                android:text="Historical trading"
+                android:textStyle="bold" />
 
             <include layout="@layout/viewgroup_his_trading_row"></include>
         </LinearLayout>
@@ -187,7 +190,8 @@
                 style="@style/head_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Financial Statement" />
+                android:text="Financial Statement"
+                android:textStyle="bold" />
 
             <include layout="@layout/viewgroup_four_column_row" />
         </LinearLayout>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -26,6 +27,7 @@ import com.seniorproject.snn2spade.seniorproject.dao.financialStatement.YearDocu
 import com.seniorproject.snn2spade.seniorproject.manager.Contextor;
 import com.seniorproject.snn2spade.seniorproject.manager.http.HttpManager;
 import com.seniorproject.snn2spade.seniorproject.util.DynamicScrollbar;
+import com.seniorproject.snn2spade.seniorproject.util.OnSwipeTouchListener;
 import com.seniorproject.snn2spade.seniorproject.util.Utils;
 import com.seniorproject.snn2spade.seniorproject.view.FinancialStatementCardViewGroup;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -62,6 +64,8 @@ public class FinancialPositionFragment extends Fragment {
     private String mSymbol;
     private FinancialStatementDao mFinancialStatementDao;
     private int mSheetType;
+
+    private OnSwipeTouchListener mSwipeTouchListener;
 
     public FinancialPositionFragment() {
         // Required empty public constructor
@@ -101,10 +105,45 @@ public class FinancialPositionFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_financial_position, container, false);
         retrieveFinancialStatementData(rootView, mSymbol,mSheetType);
         initScrollListener(rootView);
+        initOnSwipeTouchListener(rootView);
         return rootView;
     }
 
+    private void initOnSwipeTouchListener(final View rootView) {
+        final ScrollView sv = (ScrollView) rootView.findViewById(R.id.fin_scroll_view);
+        sv.setOnTouchListener(new OnSwipeTouchListener(getContext()){
+            @Override
+            public void onSwipeRight() {
+                FinancialStatementActivity act = (FinancialStatementActivity) getActivity();
+                switch (mSheetType){
+                    case FIN_POS_TYPE:
+                        getActivity().finish();
+                        break;
+                    case COMP_INCOME_TYPE:
+                        act.handleChangeButtonState(FinancialStatementActivity.FIN_POS_BUTTON);
+                        break;
+                    case CASH_FLOW_TYPE:
+                        act.handleChangeButtonState(FinancialStatementActivity.COMP_INC_BUTTON);
+                        break;
+                }
+            }
 
+            @Override
+            public void onSwipeLeft() {
+                FinancialStatementActivity act = (FinancialStatementActivity) getActivity();
+                switch (mSheetType){
+                    case FIN_POS_TYPE:
+                        act.handleChangeButtonState(FinancialStatementActivity.COMP_INC_BUTTON);
+                        break;
+                    case COMP_INCOME_TYPE:
+                        act.handleChangeButtonState(FinancialStatementActivity.CASH_FLOW_BUTTON);
+                        break;
+                    case CASH_FLOW_TYPE:
+                        break;
+                }
+            }
+        });
+    }
 
     private void initScrollListener(final View rootView ) {
         final ScrollView sv = (ScrollView) rootView.findViewById(R.id.fin_scroll_view);

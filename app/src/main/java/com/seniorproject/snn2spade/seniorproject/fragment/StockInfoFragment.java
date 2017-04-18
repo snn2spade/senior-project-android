@@ -9,17 +9,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.seniorproject.snn2spade.seniorproject.R;
 import com.seniorproject.snn2spade.seniorproject.activity.FinancialStatementActivity;
+import com.seniorproject.snn2spade.seniorproject.activity.MainActivity;
+import com.seniorproject.snn2spade.seniorproject.activity.StockInfoActivity;
 import com.seniorproject.snn2spade.seniorproject.adapter.StockInfoAdapter;
 import com.seniorproject.snn2spade.seniorproject.dao.HistoricalTradingDao;
 import com.seniorproject.snn2spade.seniorproject.manager.Contextor;
 import com.seniorproject.snn2spade.seniorproject.manager.http.HttpManager;
 import com.seniorproject.snn2spade.seniorproject.util.DynamicScrollbar;
+import com.seniorproject.snn2spade.seniorproject.util.OnSwipeTouchListener;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;
@@ -50,11 +54,6 @@ public class StockInfoFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         mSymbol = intent.getStringExtra(DashboardFragment.SYMBOL_MESSAGE);
         mPredict = intent.getBooleanExtra(DashboardFragment.PREDICT_MESSAGE, true);
-        if (mSymbol == null) {
-            // Toast.makeText(getActivity(), "mSymbol is null", Toast.LENGTH_LONG).show();
-        } else {
-            connectApiToRetrieveDataSet();
-        }
     }
 
     @Nullable
@@ -64,7 +63,33 @@ public class StockInfoFragment extends Fragment {
         mAdapter = new StockInfoAdapter(rootView);
         initFinancialStatementListener(rootView);
         initScrollListener(rootView);
+        initOnSwipeTouchListener(rootView);
+        ScrollView sv = (ScrollView) rootView.findViewById(R.id.fin_scroll_view);
+        sv.setVisibility(ScrollView.INVISIBLE);
+        if (mSymbol == null) {
+            // Toast.makeText(getActivity(), "mSymbol is null", Toast.LENGTH_LONG).show();
+        } else {
+            connectApiToRetrieveDataSet(rootView);
+        }
         return rootView;
+    }
+
+
+
+    private void initOnSwipeTouchListener(final View rootView) {
+        final ScrollView sv = (ScrollView) rootView.findViewById(R.id.fin_scroll_view);
+        sv.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+            @Override
+            public void onSwipeRight() {
+                StockInfoActivity act = (StockInfoActivity) getActivity();
+                getActivity().finish();
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                insertFinancialStatementActivity();
+            }
+        });
     }
 
     private void initScrollListener(final View rootView) {
@@ -84,14 +109,18 @@ public class StockInfoFragment extends Fragment {
         finStatementCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity().getBaseContext(), FinancialStatementActivity.class);
-                intent.putExtra(FinancialStatementActivity.SYMBOL_MESSAGE, mSymbol);
-                getActivity().startActivity(intent);
+                insertFinancialStatementActivity();
             }
         });
     }
 
-    public void connectApiToRetrieveDataSet() {
+    private void insertFinancialStatementActivity() {
+        Intent intent = new Intent(getActivity().getBaseContext(), FinancialStatementActivity.class);
+        intent.putExtra(FinancialStatementActivity.SYMBOL_MESSAGE, mSymbol);
+        getActivity().startActivity(intent);
+    }
+
+    public void connectApiToRetrieveDataSet(final View rootView) {
         Call<List<HistoricalTradingDao>> call = HttpManager.getInstance().getService().loadHistoricalTrading(mSymbol, 5);
         call.enqueue(new Callback<List<HistoricalTradingDao>>() {
             @Override
@@ -99,22 +128,27 @@ public class StockInfoFragment extends Fragment {
                 if (response.isSuccessful()) {
                     List<HistoricalTradingDao> hisTradingCollection = response.body();
                     mAdapter.updateDataSet(mSymbol, hisTradingCollection, mPredict);
-                    AVLoadingIndicatorView loading_icon = (AVLoadingIndicatorView) getActivity().findViewById(R.id.loadingIcon);
-                    loading_icon.smoothToHide();
+                    ScrollView sv = (ScrollView) rootView.findViewById(R.id.fin_scroll_view);
+                    sv.setVisibility(ScrollView.VISIBLE);
                 } else {
                     Log.e("StockInfoFragment", response.errorBody().toString());
                     Toast.makeText(Contextor.getInstance().getContext(),
                             "Server problem - 404 not found", Toast.LENGTH_LONG)
                             .show();
                 }
+                AVLoadingIndicatorView loading_icon = (AVLoadingIndicatorView) getActivity().findViewById(R.id.loadingIcon);
+                loading_icon.smoothToHide();
             }
 
             @Override
             public void onFailure(Call<List<HistoricalTradingDao>> call, Throwable t) {
                 Log.e("StockInfoFragment", t.toString().toString());
+                AVLoadingIndicatorView loading_icon = (AVLoadingIndicatorView) getActivity().findViewById(R.id.loadingIcon);
+                loading_icon.smoothToHide();
                 Toast.makeText(Contextor.getInstance().getContext(),
                         "Require internet for retrieve data", Toast.LENGTH_LONG)
                         .show();
+                getActivity().finish();
             }
         });
     }

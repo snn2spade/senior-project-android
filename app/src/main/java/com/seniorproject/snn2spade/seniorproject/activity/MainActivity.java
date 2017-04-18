@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         setContentView(R.layout.activity_main);
         initSearchBarListener();
         initHelpIconClickListener();
+        initOnClickLogoListener();
         mDashboardFragment = DashboardFragment.newInstance("");
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -51,6 +52,21 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         mPredictStock = new HashMap<>();
         initPredictStockResultList();
         handleIntent(getIntent());
+    }
+
+    private void initOnClickLogoListener() {
+        ImageView logo = (ImageView) findViewById(R.id.logo_icon);
+        logo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                insertNewHomePageActivity();
+            }
+        });
+    }
+
+    private void insertNewHomePageActivity(){
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -92,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
 
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra    (SearchManager.QUERY);
+            String query = intent.getStringExtra(SearchManager.QUERY);
             Log.d("<<<MainActivity>>>","---------------- GOT SEARCH INTENT : "+query);
             List<String> symbol_list = new ArrayList<>();
             symbol_list.add(query);

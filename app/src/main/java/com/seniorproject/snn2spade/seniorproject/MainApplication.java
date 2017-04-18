@@ -1,6 +1,11 @@
 package com.seniorproject.snn2spade.seniorproject;
 
 import android.app.Application;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.net.Uri;
+import android.provider.UserDictionary;
+
 import com.seniorproject.snn2spade.seniorproject.manager.Contextor;
 
 /**

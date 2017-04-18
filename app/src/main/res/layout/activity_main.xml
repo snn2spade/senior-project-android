@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/brown_background"
     android:orientation="vertical"
     tools:context=".activity.MainActivity">
 
@@ -10,17 +11,17 @@
         android:id="@+id/action_bar_container"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/orangeLogo"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
-            android:scaleType="centerCrop"
-            android:src="@drawable/senior_logo"
             android:id="@+id/logo_icon"
             android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:background="#90777777" />
+            android:background="#90777777"
+            android:scaleType="centerCrop"
+            android:src="@drawable/senior_logo" />
 
         <View
             android:layout_width="0dp"
@@ -61,10 +62,10 @@
 
 
     <com.wang.avi.AVLoadingIndicatorView
-        android:layout_gravity="center"
         android:id="@+id/loadingIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         app:indicatorColor="@color/colorTrendDown"
         app:indicatorName="@string/loading_icon" />
 

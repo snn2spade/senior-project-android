@@ -27,6 +27,7 @@ public class StockInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stock_info);
         initSearchBarListener();
         initHelpIconClickListener();
+        initOnClickLogoListener();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.stockInfo_fragment_container,StockInfoFragment.newInstance())
@@ -34,6 +35,22 @@ public class StockInfoActivity extends AppCompatActivity {
         }
 
     }
+
+    private void initOnClickLogoListener() {
+        ImageView logo = (ImageView) findViewById(R.id.logo_icon);
+        logo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                insertNewHomePageActivity();
+            }
+        });
+    }
+
+    private void insertNewHomePageActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
