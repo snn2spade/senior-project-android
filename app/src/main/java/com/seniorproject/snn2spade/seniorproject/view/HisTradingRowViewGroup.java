@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.seniorproject.snn2spade.seniorproject.R;
+import com.seniorproject.snn2spade.seniorproject.manager.Contextor;
 import com.seniorproject.snn2spade.seniorproject.util.Utils;
 
 import java.text.DecimalFormat;
@@ -77,9 +78,16 @@ public class HisTradingRowViewGroup extends LinearLayout {
             String chg = Utils.getInstance().convertDoubleToString(percentChg,1);
             chg = Utils.getInstance().insertTrendingSign(chg);
             tvChg.setText(chg+"%");
+            if(percentChg>=0){
+                tvChg.setTextColor(Contextor.getInstance().getContext().getResources().getColor(R.color.colorTrendUp));
+            }
+            else{
+                tvChg.setTextColor(Contextor.getInstance().getContext().getResources().getColor(R.color.colorTrendDown));
+            }
         }
         catch (NullPointerException e){
             tvChg.setText("N/A");
+            tvChg.setTextColor(Contextor.getInstance().getContext().getResources().getColor(R.color.colorTrendDown));
         }
     }
 

@@ -2,8 +2,10 @@ package com.seniorproject.snn2spade.seniorproject.view;
 
 
 import android.content.Context;
+import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -27,6 +29,7 @@ import java.util.List;
 
 public class FinancialStatementCardViewGroup extends FrameLayout {
 
+
     public FinancialStatementCardViewGroup(@NonNull Context context) {
         super(context);
         initInflate();
@@ -34,6 +37,16 @@ public class FinancialStatementCardViewGroup extends FrameLayout {
 
     public FinancialStatementCardViewGroup(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        initInflate();
+    }
+
+    public FinancialStatementCardViewGroup(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        initInflate();
+    }
+
+    public FinancialStatementCardViewGroup(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
         initInflate();
     }
 

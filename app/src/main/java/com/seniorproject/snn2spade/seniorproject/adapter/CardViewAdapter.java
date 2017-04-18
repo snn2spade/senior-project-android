@@ -116,7 +116,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
                 Utils.getInstance().convertDoubleToString(mDataset.get(position).getClose(), 2));
         /* --volume */
         ViewModifier.getInstance().setTextView(holder.mCardView, R.id.stock_volume,
-                Utils.getInstance().convertMillionUnit(mDataset.get(position).getTotalValueBaht()) + " MB");
+                Utils.getInstance().convertMillionUnit(mDataset.get(position).getTotalValueBaht()) + " M.Baht");
         /* --change */
         String change = "";
         change = change + Utils.getInstance().convertDoubleToString(mDataset.get(position).getChange(), 2).replace("-", "");

@@ -9,14 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.seniorproject.snn2spade.seniorproject.R;
 import com.seniorproject.snn2spade.seniorproject.activity.FinancialStatementActivity;
-import com.seniorproject.snn2spade.seniorproject.activity.MainActivity;
 import com.seniorproject.snn2spade.seniorproject.activity.StockInfoActivity;
 import com.seniorproject.snn2spade.seniorproject.adapter.StockInfoAdapter;
 import com.seniorproject.snn2spade.seniorproject.dao.HistoricalTradingDao;
@@ -73,7 +71,6 @@ public class StockInfoFragment extends Fragment {
         }
         return rootView;
     }
-
 
 
     private void initOnSwipeTouchListener(final View rootView) {
@@ -136,8 +133,10 @@ public class StockInfoFragment extends Fragment {
                             "Server problem - 404 not found", Toast.LENGTH_LONG)
                             .show();
                 }
-                AVLoadingIndicatorView loading_icon = (AVLoadingIndicatorView) getActivity().findViewById(R.id.loadingIcon);
-                loading_icon.smoothToHide();
+                if (getActivity() != null) {
+                    AVLoadingIndicatorView loading_icon = (AVLoadingIndicatorView) getActivity().findViewById(R.id.loadingIcon);
+                    loading_icon.smoothToHide();
+                }
             }
 
             @Override

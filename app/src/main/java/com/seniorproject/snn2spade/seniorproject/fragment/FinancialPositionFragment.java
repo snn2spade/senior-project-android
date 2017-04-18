@@ -103,7 +103,7 @@ public class FinancialPositionFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_financial_position, container, false);
-        retrieveFinancialStatementData(rootView, mSymbol,mSheetType);
+        retrieveFinancialStatementData(rootView, mSymbol, mSheetType);
         initScrollListener(rootView);
         initOnSwipeTouchListener(rootView);
         return rootView;
@@ -111,11 +111,11 @@ public class FinancialPositionFragment extends Fragment {
 
     private void initOnSwipeTouchListener(final View rootView) {
         final ScrollView sv = (ScrollView) rootView.findViewById(R.id.fin_scroll_view);
-        sv.setOnTouchListener(new OnSwipeTouchListener(getContext()){
+        sv.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
             @Override
             public void onSwipeRight() {
                 FinancialStatementActivity act = (FinancialStatementActivity) getActivity();
-                switch (mSheetType){
+                switch (mSheetType) {
                     case FIN_POS_TYPE:
                         getActivity().finish();
                         break;
@@ -131,7 +131,7 @@ public class FinancialPositionFragment extends Fragment {
             @Override
             public void onSwipeLeft() {
                 FinancialStatementActivity act = (FinancialStatementActivity) getActivity();
-                switch (mSheetType){
+                switch (mSheetType) {
                     case FIN_POS_TYPE:
                         act.handleChangeButtonState(FinancialStatementActivity.COMP_INC_BUTTON);
                         break;
@@ -145,7 +145,7 @@ public class FinancialPositionFragment extends Fragment {
         });
     }
 
-    private void initScrollListener(final View rootView ) {
+    private void initScrollListener(final View rootView) {
         final ScrollView sv = (ScrollView) rootView.findViewById(R.id.fin_scroll_view);
         sv.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
@@ -159,9 +159,9 @@ public class FinancialPositionFragment extends Fragment {
     }
 
 
-    private void retrieveFinancialStatementData(final View rootView, String mSymbol,int sheet_type) {
+    private void retrieveFinancialStatementData(final View rootView, String mSymbol, int sheet_type) {
         Call<FinancialStatementDao> call;
-        switch (sheet_type){
+        switch (sheet_type) {
             case FIN_POS_TYPE:
                 call = HttpManager.getInstance().getService().loadFinancialPosition(mSymbol);
                 break;
@@ -180,8 +180,10 @@ public class FinancialPositionFragment extends Fragment {
             @Override
             public void onResponse(Call<FinancialStatementDao> call, Response<FinancialStatementDao> response) {
                 if (response.isSuccessful()) {
-                    AVLoadingIndicatorView loading_icon = (AVLoadingIndicatorView) getActivity().findViewById(R.id.loadingIcon);
-                    loading_icon.smoothToHide();
+                    if (getActivity() != null) {
+                        AVLoadingIndicatorView loading_icon = (AVLoadingIndicatorView) getActivity().findViewById(R.id.loadingIcon);
+                        loading_icon.smoothToHide();
+                    }
                     FinancialStatementDao financialStatement = response.body();
                     mFinancialStatementDao = financialStatement;
                     Collections.reverse(mFinancialStatementDao.getYear_doc_list());
@@ -216,7 +218,7 @@ public class FinancialPositionFragment extends Fragment {
             /* add bottom space for last item */
             if (attr_idx == (numberOfAttribute - 1)) {
                 FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                lp.setMargins(0,0, 0, Utils.getInstance().dpToPx(10));
+                lp.setMargins(0, 0, 0, Utils.getInstance().dpToPx(10));
                 finStatementViewGroup.setLayoutParams(lp);
             }
             /* set attr name */

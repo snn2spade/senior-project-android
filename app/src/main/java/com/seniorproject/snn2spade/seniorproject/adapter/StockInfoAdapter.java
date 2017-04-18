@@ -67,7 +67,7 @@ public class StockInfoAdapter {
         }
         /* -- volume */
         ViewModifier.getInstance().setTextView(mRootView, R.id.info_vol,
-                Utils.getInstance().convertMillionUnit(mDataSet.get(0).getTotalValueBaht()) + " MB");
+                Utils.getInstance().convertMillionUnit(mDataSet.get(0).getTotalValueBaht()) + " M.Baht");
         /* -- date */
         DateFormat df = new SimpleDateFormat("dd MMM yy");
         String date = "(" + df.format(mDataSet.get(0).getDate()) + ")";
