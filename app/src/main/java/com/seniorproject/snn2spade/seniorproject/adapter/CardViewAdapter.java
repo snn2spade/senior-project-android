@@ -18,6 +18,7 @@ import com.seniorproject.snn2spade.seniorproject.util.ViewModifier;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -173,6 +174,12 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
 
     public void updatePredictResult(Map<String, Boolean> mPredictStock) {
         this.mPredictStockResult = mPredictStock;
+        notifyDataSetChanged();
+    }
+
+    public void clearStockList(){
+        mDataset = new ArrayList<>();
+        mStockSymbolList = new ArrayList<>();
         notifyDataSetChanged();
     }
 }

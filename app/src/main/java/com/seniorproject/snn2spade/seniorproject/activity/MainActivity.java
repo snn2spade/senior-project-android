@@ -143,10 +143,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         helpView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDashboardFragment.scrollToTop();
-                Intent tutorialIntent = new Intent(getBaseContext(), TutorialActivity.class);
-                tutorialIntent.putExtra(TutorialActivity.TUTORIAL_TYPE_MESSAGE, TutorialActivity.HOME_TUTORIAL);
-                startActivity(tutorialIntent);
+                mDashboardFragment.showTutorial();
             }
         });
     }
@@ -159,8 +156,8 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
 //        handleIntent(intent);
 //    }
 
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+    public void handleIntent(Intent intent) {
+        if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             Log.d("<<<MainActivity>>>", "---------------- GOT SEARCH INTENT : " + query);
             List<String> symbol_list = new ArrayList<>();
@@ -232,27 +229,39 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     }
 
     private void fetchHistoricalTradingListDataSet(final List<String> symbol_list) {
+        final AVLoadingIndicatorView loading_icon = (AVLoadingIndicatorView) findViewById(R.id.loadingIcon);
+        if (mDashboardFragment.getSwiperContainer() != null && mDashboardFragment.getSwiperContainer().isRefreshing()) {
+            loading_icon.hide();
+        } else {
+            loading_icon.smoothToShow();
+        }
+        mDashboardFragment.clearStockList();
         Call<List<HistoricalTradingDao>> call = HttpManager.getInstance().getService()
                 .loadHistoricalTradingBySymbolList(symbol_list);
         call.enqueue(new Callback<List<HistoricalTradingDao>>() {
             @Override
             public void onResponse(Call<List<HistoricalTradingDao>> call, Response<List<HistoricalTradingDao>> response) {
+                if (loading_icon.getVisibility() == AVLoadingIndicatorView.VISIBLE) {
+                    loading_icon.smoothToHide();
+                }
+                if (mDashboardFragment.getSwiperContainer() != null) {
+                    mDashboardFragment.getSwiperContainer().setRefreshing(false);
+                }
                 if (response.isSuccessful()) {
                     List<HistoricalTradingDao> historicalTradingCollection = response.body();
                     if (historicalTradingCollection.size() != 0) {
-                        AVLoadingIndicatorView loading_icon = (AVLoadingIndicatorView) findViewById(R.id.loadingIcon);
-                        loading_icon.smoothToHide();
                         mSymbolList = symbol_list;
                         mDashboardFragment.updateDataSet(historicalTradingCollection, mSymbolList);
                     } else {
                         Toast.makeText(Contextor.getInstance().getContext(),
                                 "Symbol search not found", Toast.LENGTH_LONG)
                                 .show();
-                        if(!isTaskRoot()){
+                        if (!isTaskRoot()) {
                             finish();
                         }
                     }
                 } else {
+
                     Log.e("MainActivity", response.errorBody().toString());
                     Toast.makeText(Contextor.getInstance().getContext(),
                             "Server problem - 404 not found", Toast.LENGTH_LONG)
@@ -262,6 +271,12 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
 
             @Override
             public void onFailure(Call<List<HistoricalTradingDao>> call, Throwable t) {
+                if (mDashboardFragment.getSwiperContainer() != null) {
+                    mDashboardFragment.getSwiperContainer().setRefreshing(false);
+                }
+                if (loading_icon.getVisibility() == AVLoadingIndicatorView.VISIBLE) {
+                    loading_icon.smoothToHide();
+                }
                 Log.e("MainActivity", t.toString().toString());
                 Toast.makeText(Contextor.getInstance().getContext(),
                         "Require internet for retrieve data", Toast.LENGTH_LONG)

@@ -1,9 +1,11 @@
 package com.seniorproject.snn2spade.seniorproject.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.seniorproject.snn2spade.seniorproject.R;
+import com.seniorproject.snn2spade.seniorproject.activity.FinancialStatementActivity;
+import com.seniorproject.snn2spade.seniorproject.activity.MainActivity;
+import com.seniorproject.snn2spade.seniorproject.activity.TutorialActivity;
 import com.seniorproject.snn2spade.seniorproject.adapter.CardViewAdapter;
 import com.seniorproject.snn2spade.seniorproject.dao.HistoricalTradingDao;
 import com.seniorproject.snn2spade.seniorproject.util.DynamicScrollbar;
@@ -44,6 +49,7 @@ public class DashboardFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private CardViewAdapter mAdapter;
+    private SwipeRefreshLayout mSwipeContainer;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -74,14 +80,14 @@ public class DashboardFragment extends Fragment {
     }
 
 
-    public void updateDataSet(List<HistoricalTradingDao> historicalTradingCollection,List<String> symbol_list) {
-        if(mAdapter!=null) {
+    public void updateDataSet(List<HistoricalTradingDao> historicalTradingCollection, List<String> symbol_list) {
+        if (mAdapter != null) {
             mAdapter.updateList(historicalTradingCollection, symbol_list);
         }
     }
 
     public void updatePredictResult(Map<String, Boolean> mPredictStock) {
-        if(mAdapter!=null){
+        if (mAdapter != null) {
             mAdapter.updatePredictResult(mPredictStock);
         }
     }
@@ -91,8 +97,29 @@ public class DashboardFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        initSwipeRefreshLayout(rootView);
         initRecyclerView(rootView);
         return rootView;
+    }
+
+    private void initSwipeRefreshLayout(View rootView) {
+        mSwipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        mSwipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                MainActivity rootAct = (MainActivity) getActivity();
+                rootAct.handleIntent(null);
+            }
+        });
+        // Configure the refreshing colors
+        mSwipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     private void initRecyclerView(View rootView) {
@@ -106,9 +133,9 @@ public class DashboardFragment extends Fragment {
         // this is data fro recycler view
         List<HistoricalTradingDao> dataSet = new ArrayList<>();
         List<String> symbolList = new ArrayList<>();
-        Map<String,Boolean> predictStockResult = new HashMap<>();
+        Map<String, Boolean> predictStockResult = new HashMap<>();
         // 3. create an adapter
-        mAdapter = new CardViewAdapter(dataSet, symbolList, predictStockResult,this);
+        mAdapter = new CardViewAdapter(dataSet, symbolList, predictStockResult, this);
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
         // 5. set item animator to DefaultAnimator
@@ -148,9 +175,11 @@ public class DashboardFragment extends Fragment {
         mListener = null;
     }
 
-    public void scrollToTop() {
-        mLayoutManager.scrollToPositionWithOffset(0, 0);
-//        mRecyclerView.smoothScrollToPosition(0);
+    public void showTutorial() {
+        mRecyclerView.smoothScrollToPosition(0);
+        Intent tutorialIntent = new Intent(getContext(), TutorialActivity.class);
+        tutorialIntent.putExtra(TutorialActivity.TUTORIAL_TYPE_MESSAGE, TutorialActivity.HOME_TUTORIAL);
+        startActivity(tutorialIntent);
     }
 
     /**
@@ -166,6 +195,16 @@ public class DashboardFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void clearStockList() {
+        if (mAdapter != null) {
+            mAdapter.clearStockList();
+        }
+    }
+
+    public SwipeRefreshLayout getSwiperContainer() {
+        return mSwipeContainer;
     }
 
 }
